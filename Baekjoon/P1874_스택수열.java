@@ -5,27 +5,24 @@ public class P1874_스택수열 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int N = sc.nextInt();
-        int[] A = new int[N];
-        for (int i = 0; i < N; i++) {
-            A[i] = sc.nextInt();
-        }
-        Stack<Integer> stack = new Stack<>();
-        int num = 1;
+        int value = 1;
         boolean result = true;
-        StringBuffer sb = new StringBuffer();
+        Stack<Integer> stackInt = new Stack<>();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < N; i++) {
-            int su = A[i];
-            if (su >= num) {
-                while (su >= num) {
-                    stack.push(num++);
+            int num = sc.nextInt();
+            if (num >= value) {
+                while (num >= value) {
+                    stackInt.push(value++);
                     sb.append("+\n");
                 }
-                stack.pop();
+                stackInt.pop();
                 sb.append("-\n");
-            } else {
-                int n = stack.pop();
-                if (n > su) {
-                    System.out.println("NO");
+            } else if (num < value) {
+                int n = stackInt.pop();
+                if (num < n) {
+                    sb.setLength(0);
+                    sb.append("NO\n");
                     result = false;
                     break;
                 } else {
@@ -33,6 +30,7 @@ public class P1874_스택수열 {
                 }
             }
         }
-        if (result) System.out.println(sb.toString());
+        if (result) System.out.println(sb);
+        else System.out.println(sb);
     }
 }

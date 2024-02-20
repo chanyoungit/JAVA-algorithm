@@ -1,26 +1,30 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class P2018_수들의합 {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        int start = 0;
+        int end = 0;
         int sum = 0;
-        int count = 1;
-        int start_index = 0, end_index = 0;
+        int result = 1;
 
-        while (end_index != N) {
+        while (end != N) {
             if (sum == N) {
-                count++;
-                end_index++;
-                sum += end_index;
-            } else if (sum > N) {
-                sum -= start_index;
-                start_index++;
-            } else if (sum < N) {
-                end_index++;
-                sum += end_index;
+                result++;
+                end++;
+                sum += end;
+            } else if (sum <= N) {
+                end++;
+                sum += end;
+            } else if (sum >= N) {
+                sum -= start;
+                start++;
             }
         }
-        System.out.println(count);
+        System.out.println(result);
     }
 }
+
