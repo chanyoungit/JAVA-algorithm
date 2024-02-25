@@ -39,12 +39,12 @@ public class P11004_K번째수2 {
         if (i > middle) {
             for (int t = j; t <= n; t++) {
                 sorted[k] = a[t];
-                if ( k <= N-1) k++;
+                if (k <= N - 1) k++;
             }
         } else {
             for (int t = i; t <= middle; t++) {
                 sorted[k] = a[t];
-                if ( k <= N-1) k++;
+                if (k <= N - 1) k++;
             }
         }
         for (int t = m; t <= n; t++) {
