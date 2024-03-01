@@ -1,7 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class P20920_영단어암기 {
     public static void main(String[] args) throws IOException {
@@ -9,20 +9,26 @@ public class P20920_영단어암기 {
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-        String[] word = new String[N];
-        for (int i = 0; i < N; i++) word[i] = br.readLine();
-        int count = 0;
+        HashMap<String, Integer> hm = new HashMap<String, Integer>();
         for (int i = 0; i < N; i++) {
-            if (word[i].length() >= M) count++;
+            String s = br.readLine();
+            if (s.length() < M) continue;
+            hm.put(s, hm.getOrDefault(s, 0) + 1);
         }
-        String[] c_word = new String[count];
-        int a = 0;
-        for (int i = 0; i < N; i++) {
-            if (word[i].length() >= M) {
-                c_word[a] = word[i];
-                a++;
+        ArrayList<String> words = new ArrayList<>(hm.keySet());
+        Collections.sort(words, new Comparator<String>() {
+            public int compare(String o1, String o2) {
+                if (hm.get(o1) != hm.get(o2))
+                    return hm.get(o2) - hm.get(o1);
+                if (o1.length() != o2.length())
+                    return o2.length() - o1.length();
+                return o1.compareTo(o2);
             }
-        }
+        });
 
+        StringBuilder sb = new StringBuilder();
+        for (String str : words)
+            sb.append(str + "\n");
+        System.out.println(sb);
     }
 }
