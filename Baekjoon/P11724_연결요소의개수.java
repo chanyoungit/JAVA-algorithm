@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class P11724_연결요소의개수 {
-    static boolean visited[];
-    static ArrayList<Integer>[] A;
+    static boolean[] visited;
+    static ArrayList<Integer>[] al;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -14,14 +14,14 @@ public class P11724_연결요소의개수 {
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
         visited = new boolean[N + 1];
-        A = new ArrayList[N + 1];
-        for (int i = 1; i <= N; i++) A[i] = new ArrayList<Integer>();
+        al = new ArrayList[N + 1];
+        for (int i = 1; i <= N; i++) al[i] = new ArrayList<Integer>();
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
             int s = Integer.parseInt(st.nextToken());
             int e = Integer.parseInt(st.nextToken());
-            A[s].add(e);
-            A[e].add(s);
+            al[s].add(e);
+            al[e].add(s);
         }
         int count = 0;
         for (int i = 1; i <= N; i++) {
@@ -33,10 +33,11 @@ public class P11724_연결요소의개수 {
         System.out.println(count);
     }
 
-    public static void DFS(int v) {
-        if (visited[v]) return;
-        visited[v] = true;
-        for (int i : A[v])
-            if (!visited[i]) DFS(i);
+    public static void DFS(int i) {
+        if (visited[i]) return;
+        visited[i] = true;
+        for (int num : al[i]) {
+            if (!visited[num]) DFS(num);
+        }
     }
 }
