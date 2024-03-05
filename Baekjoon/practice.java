@@ -1,35 +1,25 @@
+import java.util.Scanner;
+
 public class practice {
+    static int answer = 0;
+
     public static void main(String[] args) {
-
-    }
-
-    public int BSearch(int arr[], int target) {
-        int low = 0;
-        int high = arr.length - 1;
-        int mid;
-
-        while (low <= high) {
-            mid = (low + high) / 2;
-
-            if (arr[mid] == target)
-                return mid;
-            else if (arr[mid] < target)
-                high = mid - 1;
-            else
-                low = mid + 1;
+        Scanner sc = new Scanner(System.in);
+        String example = sc.nextLine();
+        String[] str = example.split("-");
+        for (int i = 0; i < str.length; i++) {
+            int temp = mySum(str[i]);
+            if (i==0) answer += temp;
+            else answer -= temp;
         }
-        return -1;
+        System.out.println(answer);
     }
 
-    public int BSearchr(int arr[], int target, int low, int high) {
-        if (low > high) return -1;
-
-        int mid = (low + high) / 2;
-        if (arr[mid] == target) return mid;
-        else if (arr[mid] > target)
-            return BSearchr(arr, target, low, mid - 1);
-        else
-            return BSearchr(arr, target, mid + 1, high);
+    public static int mySum(String a) {
+        int sum = 0;
+        String[] temp = a.split("\\+");
+        for (int i = 0; i < temp.length; i++)
+            sum += Integer.parseInt(temp[i]);
+        return sum;
     }
-
 }
