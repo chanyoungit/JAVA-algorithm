@@ -6,9 +6,9 @@ public class P2609_최대공약수와최소공배수 {
         int v1 = sc.nextInt();
         int v2 = sc.nextInt();
         int gcd = GCD(v1, v2);
-        int LCM = v1 * v2 / gcd;
+        int lcm = v1 * v2 / gcd;
         System.out.println(gcd);
-        System.out.println(LCM);
+        System.out.println(lcm);
     }
 
     public static int GCD(int a, int b) {
