@@ -1,9 +1,23 @@
 import java.io.*;
-import java.util.ArrayList;
 import java.util.PriorityQueue;
-import java.util.StringTokenizer;
 
-public class practice {
+//public class P11653_소인수분해 {
+//    public static void main(String[] args) throws IOException {
+//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//        StringBuilder sb = new StringBuilder();
+//        int N = Integer.parseInt(br.readLine());
+//        for (int i = 2; i < N; i++) {
+//            while (N % i == 0) {
+//                sb.append(i).append("\n");
+//                N /= i;
+//            }
+//        }
+//        if (N != 1) sb.append(N).append("\n");
+//        System.out.println(sb);
+//    }
+//}
+
+public class P11653_소인수분해 {
     static PriorityQueue<Integer> queue;
 
     public static void main(String[] args) throws IOException {
