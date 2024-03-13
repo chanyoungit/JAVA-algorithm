@@ -1,11 +1,7 @@
-import java.io.*;
-import java.util.StringTokenizer;
+import java.io.IOException;
 
 public class NOTE01 {
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st;
-
+        System.out.println(33);
     }
 }
