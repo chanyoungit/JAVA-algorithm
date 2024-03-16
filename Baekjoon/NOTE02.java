@@ -1,11 +1,9 @@
 public class NOTE02 {
-    static int sum;
     public static void main(String[] args) {
-        sum = 0;
-        union(2);
-        System.out.println(sum);
-    }
-    public static void union(int a){
-        sum += a;
+        long i;
+        i = 50;
+        int a = 5;
+        long c = i - a;
+        System.out.println(c);
     }
 }

@@ -1,61 +1,46 @@
 import java.io.*;
-import java.util.PriorityQueue;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-class Node {
-    int start;
-    int end;
-    long weight;
-
-    Node(int start, int end, long weight) {
-        this.start = start;
-        this.end = end;
-        this.weight = weight;
-    }
-}
 
 public class NOTE01 {
-    static int[] index;
-    static long sum;
-
-    public static void main(String[] args) throws IOException {
+    static int K, size;
+    static int[] num;
+    static ArrayList<Integer>[] tree;
+    public static void main(String[] args) throws IOException{
+        //입력값 처리하는 BufferedReader
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        //결과값 출력하는 BufferedWriter
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int V = Integer.parseInt(st.nextToken());
-        int E = Integer.parseInt(st.nextToken());
-        index = new int[V + 1];
-        sum = 0;
-        for (int i = 1; i <= V; i++) index[i] = i;
-        PriorityQueue<Node> queue = new PriorityQueue<>((o1,o2)->{
-            return Long.compare(o1.weight, o2.weight);
-        });
-        for (int i = 0; i < E; i++) {
-            st = new StringTokenizer(br.readLine());
-            int u = Integer.parseInt(st.nextToken());
-            int v = Integer.parseInt(st.nextToken());
-            long w = Integer.parseInt(st.nextToken());
-            queue.add(new Node(u, v, w));
+        K = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine()," ");
+        size = (int)(Math.pow(2, K) - 1);
+        tree = new ArrayList[K+1];
+        num = new int[size+1];
+        for(int i=0;i<=K;i++)
+            tree[i] = new ArrayList<>();
+        int index = 1;
+        //중위 순회 탐색 정보 배열에 저장
+        while(st.hasMoreTokens())
+            num[index++] = Integer.parseInt(st.nextToken());
+        search(1, 1, size);		//중위 순회 특성 이용한 Left, Right 나누기
+        //각 층에 빌딩 정보 BufferedWriter 저장
+        for(int i=1;i<=K;i++){
+            for(int j=0;j<tree[i].size();j++)
+                bw.write(tree[i].get(j) + " ");
+            bw.newLine();
         }
-        while(!queue.isEmpty()) {
-            Node node = queue.poll();
-            union(node.start, node.end, node.weight);
-        }
-        bw.write(sum + "");
+        bw.flush();		//결과 출력
         bw.close();
+        br.close();
     }
-
-    public static void union(int a, int b, long c) {
-        a = find(a);
-        b = find(b);
-        if (a != b) {
-            index[b] = a;
-            sum += c;
-        }
-    }
-
-    public static int find(int a) {
-        if (index[a] == a) return a;
-        else return index[a] = find(index[a]);
+    //중위 순회 특성 이용한 레벨에 맞는 빌딩 값들 저장 함수
+    static void search(int depth, int start, int end){
+        int mid = (start + end)/2;		//Root
+        tree[depth].add(num[mid]);
+        if(depth == K)		//단말 노드일 때
+            return;
+        search(depth+1, start, mid-1);	//Left
+        search(depth+1, mid+1, end);	//Right
     }
 }
