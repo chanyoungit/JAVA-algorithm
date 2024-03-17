@@ -1,74 +1,137 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.*;
 
-public class NOTE01{
-    static int[] parent, depth;	//부모 노드와 깊이 저장하는 배열
-    static ArrayList<ArrayList<Integer>> tree = new ArrayList<>();	//트리 형성 리스트
-    public static void main(String[] args) throws IOException{
-        //입력값 처리하는 BufferedReader
+// 11438 LCA 2
+public class NOTE01 {
+
+    static int N, M, K;
+
+    // LCA 관련 변수
+    static int[] depth;    // depth[ i ] 는 i의 깊이
+    static int[][] parent; // parent[K][V] 정점 V의 2^K번째 조상 정점 번호
+    // parent[K][V] = parent[K-1][parent[K-1][V]];
+
+    // TREE 변수
+    static ArrayList[] tree;
+
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        //결과값 출력하는 BufferedWriter
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
-        int N = Integer.parseInt(br.readLine());
-        parent = new int[N+1];
-        depth = new int[N+1];
-        for(int i=0;i<=N;i++)
-            tree.add(new ArrayList<>());
-        //트리에 대한 정보로 노드간 관계 만들기
-        for(int i=1;i<N;i++){
-            st = new StringTokenizer(br.readLine()," ");
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            tree.get(a).add(b);
-            tree.get(b).add(a);
-        }
-        setTree(1, 1, 0);	//트리 만들기
 
-        int M = Integer.parseInt(br.readLine());
-        //M개의 노드 쌍 최소 공통 조상 노드 탐색 및 결과 BufferedWriter 저장
-        for(int i=0;i<M;i++){
-            st = new StringTokenizer(br.readLine(), " ");
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            bw.write(LCA(a, b) + "\n");
+        // 1. 입력 & 변수 준비
+        N = Integer.parseInt(br.readLine());
+
+        // 2^K >= N인 첫번째 K 찾기,  문제조건 : N >= 2, K를 -1부터 시작해야 아래 값이 나옴
+        // N이 17이면 2^4 번째 조상까지 기록 필요    17 = 2^4 + 2^0
+        // N이 16이면 2^4 번째 조상까지 기록 필요    16 = 2^4
+        // N이 15이면 2^3 번째 조상까지 기록 필요    15 = 2^3 + 2^2 + 2^1 + 2^0
+        K = -1;
+        for (int i = 1; i <= N; i *= 2) {
+            K++;
         }
-        bw.flush();		//결과 출력
-        bw.close();
+
+        // LCA 관련 변수 초기화
+        depth = new int[N + 1];
+        parent = new int[K + 1][N + 1];          // 2^K 까지 표현해야하므로 K+1로 선언
+
+        // TREE 변수 초기화
+        tree = new ArrayList[N+1];
+        for (int i = 1; i <= N; i++) {
+            tree[i] = new ArrayList<Integer>();
+        }
+
+        int a,b;
+        for (int i = 1; i <= N-1; i++) {
+            st = new StringTokenizer(br.readLine());
+            a = Integer.parseInt(st.nextToken());
+            b = Integer.parseInt(st.nextToken());
+            // 양방향 간선
+            tree[a].add(b);
+            tree[b].add(a);
+        }
+
+        // 2. DEPTH 확인
+        dfs(1, 1);
+
+        // 3. 2^K 까지 parent 채우기
+        fillParent();
+
+        // 4. LCA 진행
+        M = Integer.parseInt(br.readLine());
+        StringBuilder sb = new StringBuilder();
+        for (int i=1; i<=M; i++) {
+            st = new StringTokenizer(br.readLine());
+            a = Integer.parseInt(st.nextToken());
+            b = Integer.parseInt(st.nextToken());
+
+            sb.append(lca(a,b)+"\n");
+        }
+
+        System.out.println(sb.toString());
+
         br.close();
     }
-    //트리를 형성 및 부모 노드와 깊이 저장하는 재귀함수
-    static void setTree(int cur, int d, int p){
-        depth[cur] = d;		//깊이 저장
-        parent[cur] = p;	//부모 노드 저장
-        //자식 노드들 탐색
-        for(int next : tree.get(cur)){
-            if(next == p)
-                continue;
-            setTree(next, d+1, cur);
+
+    // DEPTH 확인, 부모 기록 DFS
+    static void dfs(int id, int cnt) {
+        // 1. depth를 기록
+        depth[id] = cnt;
+
+        // 2. 자식들의 depth를 기록
+        int len = tree[id].size();
+        for (int i = 0; i < len; i++) {
+            int next = (Integer)tree[id].get(i);
+
+            // 아직 깊이를 모르면 → 미방문 노드
+            if (depth[next] == 0) {
+                dfs(next, cnt+1);
+                parent[0][next] = id;		// 첫번째 부모를 기록  (2^0)
+            }
+
+        }
+        return;
+    }
+
+    // 2 ^ K 부모 채우기
+    static void fillParent() {
+        // 2^K 번째 부모까지 채우기
+        for (int i = 1; i<=K; i++) {
+            for (int j = 1; j<=N; j++) {
+                // parent[K][V] = parent[K-1][parent[K-1][V]];
+                parent[i][j] = parent[i-1][parent[i-1][j]];
+            }
         }
     }
-    //최소 공통 조상 노드 구하는 함수
-    static int LCA(int a, int b){
-        int ah = depth[a];		//a의 깊이
-        int bh = depth[b];		//b의 깊이
-        //a의 깊이가 b보다 클 경우 감소시키기
-        while(ah > bh){
-            a = parent[a];
-            ah--;
+
+    // 최소공통조상
+    static int lca(int a, int b) {
+        // 1. depth[a] >= depth[b] 이도록 조정하기
+        if (depth[a] < depth[b]) {
+            int tmp = a;
+            a = b;
+            b = tmp;
         }
-        //b깊이가 a보다 클 경우 감소시키기
-        while(ah < bh){
-            b = parent[b];
-            bh--;
+
+        // 2. 더 깊은 a를 2^K승 점프하여 depth를 맞추기
+        //    깊이의 차를 2제곱수의 합을 이용해 좁히기 - 큰 수부터 Jump
+        for (int i = K; i>=0; i--) {
+            if (Math.pow(2, i) <= depth[a] - depth[b]) {
+                a = parent[i][a];
+            }
         }
-        //깊이가 같아졌을 때 동시에 올라가면서 공통 조상 노드 찾기
-        while(true){
-            if(a==b)
-                return a;
-            a = parent[a];
-            b = parent[b];
+
+        // 3. depth를 맞췄는데 같다면 바로 종료
+        if (a == b) return a;
+
+        // 4. a-b는 같은 depth이므로 2^K승 점프하며 공통부모 바로 아래까지 올리기
+        for (int i = K; i >= 0; i--) {
+            if (parent[i][a] != parent[i][b]) {
+                a = parent[i][a];
+                b = parent[i][b];
+            }
         }
+
+        // 공통부모 바로 아래에서 반복문이 끝났으므로 첫번째 부모 (2^0) 리턴
+        return parent[0][a];
     }
 }
