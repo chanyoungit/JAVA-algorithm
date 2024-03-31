@@ -1,60 +1,67 @@
 import java.io.*;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class NOTE01 {
-    static int[] dx = {0, 1, 0, -1};
-    static int[] dy = {1, 0, -1, 0};
-    static int[][] arr;
-    static boolean[][] visit;
-    static int N, M;
+    static ArrayList<Integer>[] al;
+    static boolean[] visit;
+    static int[] check;
+    static boolean result;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
-        // 코드 시작
-        st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        arr = new int[N + 1][M + 1];
-        visit = new boolean[N + 1][M + 1];
-        for (int i = 1; i <= N; i++) {
-            String str = br.readLine();
-            char[] ch = str.toCharArray();
-            for (int j = 1; j <= M; j++) arr[i][j] = ch[j - 1] - '0';
+
+        int K = Integer.parseInt(br.readLine());
+        for (int i = 0; i < K; i++) {
+            st = new StringTokenizer(br.readLine());
+            int V = Integer.parseInt(st.nextToken());
+            int E = Integer.parseInt(st.nextToken());
+            al = new ArrayList[V + 1];
+            visit = new boolean[V + 1];
+            check = new int[V + 1];
+            result = true;
+            for (int j = 1; j <= V; j++) al[j] = new ArrayList<>();
+            for (int j = 0; j < E; j++) {
+                st = new StringTokenizer(br.readLine());
+                int u = Integer.parseInt(st.nextToken());
+                int v = Integer.parseInt(st.nextToken());
+                al[u].add(v);
+                al[v].add(u);
+            }
+            for (int j = 1; j <= V; j++) {
+                if (!visit[j]) DFS(j);
+            }
+//            for (int t = 1; t <= V; t++) {
+//                System.out.println(check[t]);
+//            }
+//            for (int t = 1; t <= V; t++) {
+//                System.out.printf("al[%d] : ", t);
+//                for(int k : al[t]){
+//                    System.out.printf("%d ", k);
+//                }
+//                System.out.println();
+//            }
+            if (result) bw.write("YES\n");
+            else bw.write("NO\n");
         }
 
-        BFS(1, 1);
-        bw.write(arr[N][M] + "");
 
-        // 코드 끝
         bw.flush();
         bw.close();
         br.close();
     }
 
-    public static void BFS(int i, int j) {
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(i);
-        queue.add(j);
-        while (!queue.isEmpty()) {
-            int a = queue.poll();
-            int b = queue.poll();
-            visit[a][b] = true;
-            for (int k = 0; k < 4; k++) {
-                int x = a + dx[k];
-                int y = b + dy[k];
-                if (x >= 1 && y >= 1 && x <= N && y <= M) {
-                    if (arr[x][y] != 0 && !visit[x][y]) {
-                        visit[x][y] = true;
-                        arr[x][y] = arr[a][b] + 1;
-                        queue.add(x);
-                        queue.add(y);
-                    }
-                }
+    public static void DFS(int i) {
+        visit[i] = true;
+        for (int j : al[i]) {
+            if (!visit[j]) {
+                check[j] = (check[i] + 1) % 2;
+                DFS(j);
+            } else {
+                if (check[j] == check[i]) result = false;
             }
         }
     }
