@@ -1,5 +1,4 @@
 import java.io.*;
-import java.math.BigInteger;
 import java.util.StringTokenizer;
 
 public class P18662_등차수열 {
