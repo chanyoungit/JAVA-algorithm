@@ -1,8 +1,7 @@
 import java.io.*;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-public class NOTE {
+public class P16800_구구단걷기 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -11,11 +10,19 @@ public class NOTE {
         int T = Integer.parseInt(br.readLine());
 
         for (int i = 0; i < T; i++) {
-            int N = Integer.parseInt(br.readLine());
-            String str = br.readLine();
-            int range = (int)Math.pow(T,2);
+            long N = Long.parseLong(br.readLine());
+            long count = Long.MAX_VALUE;
 
+            for (int j = 1; j <= Math.sqrt(N); j++) {
+                if (N % j == 0) {
+                    long now = N / j + j - 2;
+                    if (count > now)
+                        count = now;
+                }
+            }
 
+            int seq = i + 1;
+            bw.write("#" + seq + " " + count + "\n");
         }
 
         bw.flush();
