@@ -1,6 +1,8 @@
-import java.io.*;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.StringTokenizer;
+import java.io.*;
 
 public class NOTE {
     public static void main(String[] args) throws IOException {
@@ -8,18 +10,16 @@ public class NOTE {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
-        int T = Integer.parseInt(br.readLine());
+        Integer[] arr = { 10, 5, 4, 3 };
+        Arrays.sort(arr, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1 - o2;
+            }
+        });
 
-        for (int i = 0; i < T; i++) {
-            int N = Integer.parseInt(br.readLine());
-            String str = br.readLine();
-            int range = (int)Math.pow(T,2);
-
-
+        for (int i = 0; i < arr.length; i++) {
+            System.out.println(arr[i]);
         }
-
-        bw.flush();
-        bw.close();
-        br.close();
     }
 }
