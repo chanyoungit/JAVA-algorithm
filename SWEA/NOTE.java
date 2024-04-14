@@ -9,19 +9,13 @@ public class NOTE {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        HashMap<Integer, String> hm = new HashMap<>();
-        hm.put(1, "사과");
-        hm.put(2, "바나나");
-        hm.put(3, "포도");
+        int M = 10;
 
-        for (Map.Entry<Integer, String> entry : hm.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue());
-        }
-
-        Iterator<Integer> keys = hm.keySet().iterator();
-        while(keys.hasNext()) {
-            int key = keys.next();
-            hm.put(key, hm.getOrDefault(key, "0") + 1);
+        while (M != 0) {
+            int a = M & 1;
+            System.out.println(a);
+            M = M >> 1;
+            System.out.println(M);
         }
     }
 }
