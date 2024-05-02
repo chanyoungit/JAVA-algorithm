@@ -1,9 +1,5 @@
-import java.io.*;
-
-public class NOTE {
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+class NOTE {
+    public static void main(String[] args) {
+        
     }
 }

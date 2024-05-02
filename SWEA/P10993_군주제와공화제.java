@@ -1,10 +1,8 @@
 import java.io.*;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class P10993_군주제와공화제 {
-    static char[] ch;
     static int[] index;
-    static int N;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -14,60 +12,71 @@ public class P10993_군주제와공화제 {
         int T = Integer.parseInt(br.readLine());
 
         for (int test_case = 1; test_case <= T; test_case++) {
-            N = Integer.parseInt(br.readLine());
-            int[][] arr = new int[N][3];
-            ch = new char[N];
-            index = new int[N];
-            for (int i = 0; i < N; i++) {
+            int N = Integer.parseInt(br.readLine());
+            int[][] arr = new int[N + 1][3];
+            index = new int[N + 1];
+            char[] answer = new char[N + 1];
+
+            for (int i = 1; i <= N; i++) {
+                st = new StringTokenizer(br.readLine());
+                int a = Integer.parseInt(st.nextToken());
+                int b = Integer.parseInt(st.nextToken());
+                int c = Integer.parseInt(st.nextToken());
+
+                arr[i][0] = a;
+                arr[i][1] = b;
+                arr[i][2] = c;
                 index[i] = i;
             }
 
-            for (int i = 0; i < N; i++) {
-                st = new StringTokenizer(br.readLine());
-                arr[i][0] = Integer.parseInt(st.nextToken());
-                arr[i][1] = Integer.parseInt(st.nextToken());
-                arr[i][2] = Integer.parseInt(st.nextToken());
-            }
+            for (int i = 1; i <= N; i++) {
+                int m0 = arr[i][0];
+                int m1 = arr[i][1];
+                int m2 = arr[i][2];
+                int cnt = 0;
+                int location = -1;
 
-            for (int i = 0; i < N; i++) {
-                int count = 0;
-                for (int j = 0; j < N; j++) {
-                    if (i != j) {
-                        double power = arr[j][2]
-                                / ((Math.pow(arr[i][0] - arr[j][0], 2)) + (Math.pow(arr[i][1] - arr[j][1], 2)));
-                        if (arr[i][2] < power) {
-                            count++;
-                            index[i] = index[j];
-                        }
+                for (int j = 1; j <= N; j++) {
+                    if (i == j) {
+                        continue;
+                    }
+
+                    int t0 = arr[j][0];
+                    int t1 = arr[j][1];
+                    int t2 = arr[j][2];
+
+                    double value = t2 / (Math.pow(t0 - m0, 2) + Math.pow(t1 - m1, 2));
+                    if (value > m2) {
+                        cnt++;
+                        location = j;
                     }
                 }
-                if (count == 0) {
-                    ch[i] = 'K';
-                } else if (count == 1) {
-                    ch[i] = (char) (index[i] + '0');
+
+                if (cnt == 0) {
+                    answer[i] = 'K';
+                } else if (cnt >= 2) {
+                    answer[i] = 'D';
                 } else {
-                    ch[i] = 'D';
+                    index[i] = location;
                 }
             }
 
-            for (int i = 0; i < N; i++) {
-                if (ch[i] != 'K' && ch[i] != 'D') {
-                    ch[i] = find(ch[i] - '0');
+            for (int i = 1; i <= N; i++) {
+                if (index[i] != i) {
+                    find(i);
+                    answer[i] = (char) (index[i] + '0');
                 }
             }
 
-            for (int i = 0; i < N; i++) {
-                if (ch[i] != 'K' && ch[i] != 'D') {
-                    ch[i] += 1;
-                }
+            StringBuilder sb = new StringBuilder();
+            sb.append("#" + test_case + " ");
+
+            for (int i = 1; i <= N; i++) {
+                sb.append(answer[i] + " ");
             }
 
-            bw.write("#" + test_case + " ");
-            for (int i = 0; i < N; i++) {
-                bw.write(ch[i] + " ");
-            }
-
-            bw.write("\n");
+            bw.write(sb.toString() + "\n");
+            sb.setLength(0);
         }
 
         bw.flush();
@@ -75,11 +84,12 @@ public class P10993_군주제와공화제 {
         br.close();
     }
 
-    public static char find(int a) {
-        if (ch[a] == 'K' || ch[a] == 'D') {
-            return (char) (a + '0');
+    public static int find(int a) {
+        if (index[index[a]] == index[a]) {
+            return index[a];
         } else {
-            return find(ch[a] - '0');
+            int num = index[a];
+            return index[a] = find(num);
         }
     }
 }
