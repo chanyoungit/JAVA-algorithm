@@ -8,7 +8,7 @@ class NOTE {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
-
+        
 
         bw.flush();
         bw.close();
