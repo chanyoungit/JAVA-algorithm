@@ -12,6 +12,5 @@ class NOTE {
         sc.nextLine();
 
         String str = sc.nextLine();
-        System.out.println(str);
     }
 }
