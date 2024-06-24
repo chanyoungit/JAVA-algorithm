@@ -18,8 +18,8 @@ class P1158_요세푸스문제 {
             queue.add(i);
         }
 
-        while(queue.size() != 1) {
-            for (int i=1; i<K; i++) {
+        while (queue.size() != 1) {
+            for (int i = 1; i < K; i++) {
                 queue.add(queue.poll());
             }
             sb.append(queue.poll() + ", ");
